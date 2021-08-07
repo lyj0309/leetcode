@@ -787,3 +787,208 @@ func canCompleteCircuit(gas []int, cost []int) int {
 	}
 	return -1
 }
+func GuessingGame() {
+	var s string
+	fmt.Printf("Pick an integer from 0 to 100.\n")
+	answer := sort.Search(100, func(i int) bool {
+		fmt.Printf("Is your number <= %d? ", i)
+		_, err := fmt.Scanf("%s", &s)
+		if err != nil {
+			return false
+		}
+		fmt.Println(s)
+		return s != "" && s[0] == 'y'
+	})
+	fmt.Printf("Your number is %d.\n", answer)
+}
+
+func shipWithinDays(weights []int, D int) int {
+	// 确定二分查找左右边界
+	left, right := 0, 0
+	for _, w := range weights {
+		if w > left {
+			left = w
+		}
+		right += w
+	}
+	fmt.Println(left, right)
+	return left + sort.Search(right-left, func(x int) bool {
+		fmt.Println(`x`, x)
+		x += left
+		day := 1 // 需要运送的天数
+		sum := 0 // 当前这一天已经运送的包裹重量之和
+		for _, w := range weights {
+			if sum+w > x {
+				day++
+				sum = 0
+			}
+			sum += w
+		}
+		fmt.Println(day)
+		return day <= D
+	})
+}
+
+func minDiffInBST(root *TreeNode) int {
+	var v int
+	var min int
+	reserve := func(n *TreeNode) {}
+	reserve = func(n *TreeNode) {
+		if n == nil {
+			return
+		}
+		if v-n.Val > min {
+			min = v - n.Val
+		}
+		fmt.Println(n.Val)
+		reserve(n.Left)
+		reserve(n.Right)
+	}
+	reserve(root)
+	return min
+}
+
+func nthUglyNumber(n int) int {
+	if n == 1 {
+		return 1
+	}
+	k := 1
+	for i := 2; ; i++ {
+		if k == n {
+			return i
+		}
+		for b := 2; b < i; b++ {
+			//fmt.Println(i%b,i,b,k)
+			if i%b == 0 && b != 2 && b != 3 && b != 5 { //不是丑数
+				fmt.Println(i, b)
+				goto this
+			}
+		}
+		k++
+	this:
+	}
+}
+func merge(nums1 []int, m int, nums2 []int, n int) {
+	if m == len(nums1) {
+		return
+	}
+	idx1, idx2 := 0, 0
+	for k := 0; k < m+n; k++ {
+		if len(nums2) > idx2 {
+			if nums1[idx1] >= nums2[idx2] {
+				for z := len(nums1) - 1; z > idx1; z-- {
+					nums1[z] = nums1[z-1]
+				}
+				nums1[idx1] = nums2[idx2]
+				idx2++
+			}
+		}
+		if nums1[idx1] == 0 {
+			nums1[idx1] = nums2[idx2]
+			idx2++
+		}
+		idx1++
+	}
+}
+
+func searchMatrix(matrix [][]int, target int) bool {
+	//last := -999999999
+	for i := 0; i < len(matrix); i++ {
+		for r := 0; r < len(matrix[i]); r++ {
+			if matrix[i][r] == target {
+				return true
+			}
+			if matrix[i][r] > target {
+				return false
+			}
+		}
+	}
+	return false
+}
+
+func reverseBits(n uint32) (rev uint32) {
+	for i := 0; i < 32 && n > 0; i++ {
+		fmt.Println(rev, n)
+		rev |= n & 1 << (31 - i)
+		n >>= 1
+	}
+
+	return
+}
+
+func plusOne(digits []int) []int {
+	if digits[len(digits)-1] != 9 {
+		digits[len(digits)-1] += 1
+		return digits
+	}
+	digits[len(digits)-1] = 0
+	p := true
+	for i := len(digits) - 2; i >= 0; i-- {
+		fmt.Println(digits)
+		if p == true && digits[i] == 9 {
+			digits[i] = 0
+			continue
+		}
+		if p == true {
+			p = false
+			digits[i] += 1
+		}
+	}
+	if p == true {
+		digits = append([]int{1}, digits...)
+	}
+	return digits
+}
+
+func deleteDuplicates(head *ListNode) *ListNode {
+	if head == nil {
+		return nil
+	}
+
+	cur := head
+	for cur.Next != nil {
+		if cur.Next.Val == cur.Val {
+			cur.Next = cur.Next.Next
+		} else {
+			cur = cur.Next
+		}
+	}
+	return head
+}
+
+func deleteDuplicates1(head *ListNode) *ListNode {
+	if head == nil {
+		return nil
+	}
+
+	dummy := &ListNode{0, head} //哑巴节点
+
+	cur := dummy
+	for cur.Next != nil && cur.Next.Next != nil {
+		if cur.Next.Val == cur.Next.Next.Val {
+			x := cur.Next.Val
+			for cur.Next != nil && cur.Next.Val == x {
+				cur.Next = cur.Next.Next
+			}
+		} else {
+			cur = cur.Next
+		}
+	}
+
+	return dummy.Next
+}
+
+func countNegatives(grid [][]int) int {
+	l := len(grid[0])
+	r := 0
+	for _, ints := range grid {
+		for i := l; i > 0; i-- {
+			if ints[i-1] < 0 {
+				r++
+			} else {
+				break
+			}
+		}
+	}
+	return r
+}
