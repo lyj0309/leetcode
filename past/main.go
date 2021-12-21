@@ -4,6 +4,7 @@ import (
 	"container/heap"
 	"context"
 	"fmt"
+	"math"
 	"regexp"
 	"sort"
 	"strconv"
@@ -18,6 +19,82 @@ type TreeNode struct {
 
 var tree = TreeNode{Val: 1, Right: &TreeNode{Val: 3, Left: &TreeNode{Val: 6}, Right: &TreeNode{Val: 7}}}
 var tree1 = TreeNode{Val: 1, Left: &TreeNode{Val: 2, Left: &TreeNode{Left: &TreeNode{Val: 4}, Right: &TreeNode{Val: 5}}}, Right: &TreeNode{Val: 3, Left: &TreeNode{Val: 6}, Right: &TreeNode{Val: 7}}}
+
+func climbStairs(n int) int {
+	if 0 == n {
+		return 1
+	}
+	if n <= 2 {
+		return n
+	}
+	a, b, tmp := 1, 2, 0
+	for i := 3; i <= n; i++ {
+		tmp = a + b
+		a = b
+		b = tmp
+	}
+	return tmp
+}
+
+func mySqrt(x int) int {
+	return int(math.Sqrt(float64(x)))
+}
+func lengthOfLastWord(s string) int {
+	a := 0
+	l := 0
+	for i := len(s) - 1; i >= 0; i-- {
+		if s[i] == 32 && a == 0 {
+			continue
+		} else if s[i] == 32 {
+			return l
+		} else {
+			a = 1
+			l++
+		}
+	}
+	return l
+}
+func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+	if l1 == nil {
+		return l2
+	} else if l2 == nil {
+		return l1
+	} else if l1.Val < l2.Val {
+		l1.Next = mergeTwoLists(l1.Next, l2)
+		return l1
+	} else {
+		l2.Next = mergeTwoLists(l1, l2.Next)
+		return l2
+	}
+}
+
+func removeElement(nums []int, val int) int {
+	left, right := 0, len(nums)
+	for left < right {
+		if nums[left] == val {
+			nums[left] = nums[right-1]
+			right--
+		} else {
+			left++
+		}
+	}
+	return left
+}
+
+func toD(i int) int {
+	cd := 30
+	nc := 0
+	var f int
+	f = 5
+	ha := (i - 1) / 8
+	if i-ha*8 > 4 {
+		f = 4
+	}
+	dest := int(math.Abs(float64(20 * ((i - ha*8) - f))))
+	nc = dest + (-(i-24)/8)*20
+	nd := nc + cd
+	return nd
+}
 
 func searchInsert(nums []int, target int) int {
 	if target > nums[len(nums)] {
@@ -48,27 +125,6 @@ func removeDuplicates(nums []int) int {
 		nums = nums[:i1]
 	}
 	return len(nums)
-}
-
-func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
-	var res *ListNode
-	head := res
-	for {
-		if l1 != nil {
-			i := l1.Val
-			if l2 != nil {
-				k := l1.Val
-				if i > k {
-					res.Next = l2
-				} else {
-					res.Next = l1
-				}
-				res = res.Next
-			}
-		} else {
-			return head
-		}
-	}
 }
 
 func isValid(s string) bool {
